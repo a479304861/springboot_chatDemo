@@ -19,7 +19,6 @@ public class HelloController {
 //    @Autowired
 //    private Person person;
 
-
     //
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ResponseEntity<Map<String,Object>> getUser() throws IOException{

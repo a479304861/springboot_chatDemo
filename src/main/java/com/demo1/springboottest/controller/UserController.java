@@ -4,6 +4,7 @@ import com.demo1.springboottest.data.receive.IdReceive;
 import com.demo1.springboottest.data.respose.FriendRespose;
 import com.demo1.springboottest.data.User;
 import com.demo1.springboottest.data.mysql.UserMysql;
+import com.demo1.springboottest.data.respose.MessagePost;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,14 +86,18 @@ public class UserController {
         return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/getMeasure", method = RequestMethod.GET)
-    public ResponseEntity<Map<String,Object>> getMeasure(@RequestParam(value = "info") String info) throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("/user/getMeasure");
+    @RequestMapping(value = "/user/getMessage", method = RequestMethod.GET)
+    public ResponseEntity<Map<String,Object>> getMessage
+            (@RequestParam(value = "userId") int userId
+           ,@RequestParam(value = "receiveId") int receiveId) throws IOException, SQLException, ClassNotFoundException {
+
+        System.out.println("/user/getMessage");
+
         //算出结果   [{key,friendName},{key,friendName}]
-//        FriendRespose friendRespose = mysql.selectFriend(idReceive.getId());
+        MessagePost messagePost = mysql.selectMessage(userId,receiveId);
         //返回值
         Map<String,Object> result=new HashMap<String, Object>();
-//        result.put("data",friendRespose.getData());
+        result.put("data",messagePost.getData());
         result.put("succeed",true);
         System.out.println(result);
         return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);

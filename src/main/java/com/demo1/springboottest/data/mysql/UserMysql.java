@@ -2,6 +2,7 @@ package com.demo1.springboottest.data.mysql;
 
 import com.demo1.springboottest.data.respose.FriendRespose;
 import com.demo1.springboottest.data.User;
+import com.demo1.springboottest.data.respose.MessagePost;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -113,6 +114,33 @@ public class UserMysql {
         }
 
         return null;
+
+    }
+
+    public MessagePost selectMessage(int sendId,int receiveId){
+        try {
+            Map<String, Object> result =new HashMap<String, Object>();
+            // 执行SQL语句
+            String sql="SELECT  * FROM message WHERE SendId ='%s'and ReceiveId='%s'OR(SendId ='%s'and ReceiveId='%s') ORDER BY time";
+            sql = String.format(sql, sendId,receiveId,receiveId,sendId);
+            System.out.println(sql);
+            ResultSet rs = stmt.executeQuery(sql);
+            MessagePost messagePost=new MessagePost();
+            while (rs.next()){
+                MessagePost.DataBean dataBean = new MessagePost.DataBean();
+                dataBean.setSendId(rs.getInt(2));
+                dataBean.setReceiveId(rs.getInt(3));
+                dataBean.setContent(rs.getString(4));
+                messagePost.addData(dataBean);
+            }
+            return  messagePost;
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
 
     }
 }

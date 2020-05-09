@@ -38,28 +38,22 @@ public class FriendRespose {
         public void setFriendId(int friendId) {
             this.friendId = friendId;
         }
-
         public String getName() {
             return name;
         }
-
         public void setName(String name) {
             this.name = name;
         }
     }
-
     public boolean getSucceed() {
         return succeed;
     }
-
     public void setSucceed(boolean succeed) {
         this.succeed = succeed;
     }
-
     public List<DataBean> getData() {
         return data;
     }
-
     public void addData(DataBean dataBean) {
         data.add(dataBean);
     }

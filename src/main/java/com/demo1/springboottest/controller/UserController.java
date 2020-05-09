@@ -88,7 +88,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/getMessage", method = RequestMethod.GET)
     public ResponseEntity<Map<String,Object>> getMessage
-            (@RequestParam(value = "userId") int userId
+            (@RequestParam(value = "userId") String  userId
            ,@RequestParam(value = "receiveId") int receiveId) throws IOException, SQLException, ClassNotFoundException {
 
         System.out.println("/user/getMessage");

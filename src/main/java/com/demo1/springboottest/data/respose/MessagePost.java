@@ -52,16 +52,11 @@ public class MessagePost {
                     "sendId=" + sendId +
                     ", receiveId=" + receiveId +
                     ", content='" + content + '\'' +
-                    ", year='" + year + '\'' +
-                    ", month='" + month + '\'' +
-                    ", day='" + day + '\'' +
-                    ", mTime=" + mTime +
                     '}';
         }
 
         private String content;
-        private String year;
-        private String month;
+
 
         public int getSendId() {
             return sendId;
@@ -87,40 +82,7 @@ public class MessagePost {
             this.content = content;
         }
 
-        public String getYear() {
-            return year;
-        }
 
-        public void setYear(String year) {
-            this.year = year;
-        }
-
-        public String getMonth() {
-            return month;
-        }
-
-        public void setMonth(String month) {
-            this.month = month;
-        }
-
-        public String getDay() {
-            return day;
-        }
-
-        public void setDay(String day) {
-            this.day = day;
-        }
-
-        public Time getTime() {
-            return mTime;
-        }
-
-        public void setTime(Time time) {
-            mTime = time;
-        }
-
-        private String day;
-        private Time mTime;
 
     }
 }

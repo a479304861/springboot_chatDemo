@@ -117,7 +117,7 @@ public class UserMysql {
 
     }
 
-    public MessagePost selectMessage(int sendId,int receiveId){
+    public MessagePost selectMessage(String  sendId,int receiveId){
         try {
             Map<String, Object> result =new HashMap<String, Object>();
             // 执行SQL语句

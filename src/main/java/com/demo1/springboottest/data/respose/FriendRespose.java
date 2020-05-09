@@ -22,6 +22,15 @@ public class FriendRespose {
 
     public static class DataBean{
         private int friendId;
+        private boolean isOnline;
+
+        public boolean isOnline() {
+            return isOnline;
+        }
+
+        public void setOnline(boolean online) {
+            isOnline = online;
+        }
 
         @Override
         public String toString() {

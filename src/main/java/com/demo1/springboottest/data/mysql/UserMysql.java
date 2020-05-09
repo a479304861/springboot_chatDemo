@@ -97,7 +97,7 @@ public class UserMysql {
         try {
             Map<String, Object> result =new HashMap<String, Object>();
             // 执行SQL语句
-                String sql="SELECT  Userid,name FROM user WHERE UserId in (select friendid from friend where Userid='%s')";
+            String sql="SELECT  Userid,name,isonline FROM user WHERE UserId in (select friendid from friend where Userid='%s')";
             sql = String.format(sql, i);
             ResultSet rs = stmt.executeQuery(sql);
             FriendRespose friend=new FriendRespose();
@@ -105,6 +105,7 @@ public class UserMysql {
                 FriendRespose.DataBean dataBean = new FriendRespose.DataBean();
                 dataBean.setFriendId(rs.getInt(1));
                 dataBean.setName(rs.getString(2));
+                dataBean.setOnline(rs.getBoolean(3));
                friend.addData(dataBean);
             }
             return  friend;

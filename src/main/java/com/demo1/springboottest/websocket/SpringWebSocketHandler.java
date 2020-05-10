@@ -2,6 +2,7 @@ package com.demo1.springboottest.websocket;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpringWebSocketHandler extends TextWebSocketHandler {
+
     private static final Map<String, WebSocketSession> users = new HashMap<>();
 
     /**

@@ -1,5 +1,6 @@
 package com.demo1.springboottest;
 
+import com.demo1.springboottest.SocketIo.NamespaceSocketServer;
 import com.demo1.springboottest.socket.SocketTest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,10 +12,7 @@ import java.sql.SQLException;
 public class SpringboottestApplication {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
         SpringApplication.run(SpringboottestApplication.class, args);
-        SocketTest socketTest = new SocketTest();
-
-
+        NamespaceSocketServer.main();
     }
 }

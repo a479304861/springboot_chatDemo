@@ -21,7 +21,6 @@ public class SpringWebSocketConfig  implements WebSocketConfigurer {
     @Bean
     public SpringWebSocketHandlerInterceptor getInterceptor() {
         return new SpringWebSocketHandlerInterceptor();
-
     }
 
     @Override

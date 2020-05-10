@@ -1,5 +1,6 @@
 package com.demo1.springboottest.controller;
 
+import com.demo1.springboottest.data.respose.PostMessage;
 import com.demo1.springboottest.websocket.SpringWebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,15 +22,16 @@ public class WebSocketController {
     /**
      * 登录将username放入session中，然后在拦截器HandshakeInterceptor中取出
      */
+
     @ResponseBody
     @RequestMapping("/login")
-    public ResponseEntity<Map<String,Object>>  login(HttpServletRequest request, @RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
-        System.out.println("登录：" + username + "：" + password);
+    public ResponseEntity<Map<String,Object>>  login(HttpServletRequest request, @RequestParam(value = "username") String username)  {
+        System.out.println("登录：" + username);
         HttpSession session = request.getSession();
-
         // 返回值
         Map<String,Object> map1 = new HashMap<String,Object>();
         if (null != session) {
+            System.out.println("!!!!!!!!!!!!!!");
             session.setAttribute("SESSION_USERNAME", username);
             map1.put("success",true);
         } else {
@@ -41,6 +43,7 @@ public class WebSocketController {
     @RequestMapping("/hello")
     public ResponseEntity<Map<String,Object>> hello(){
         System.out.println("/hello");
+        //返回值
         Map<String,Object> map1 = new HashMap<String,Object>();
         map1.put("success",true);
         return new ResponseEntity<Map<String,Object>>(map1, HttpStatus.OK);
@@ -48,17 +51,24 @@ public class WebSocketController {
 
     @ResponseBody
     @RequestMapping("/sendToUser")
-    public String send(@RequestParam(value = "username") String username, @RequestParam(value = "info") String info) {
+    public ResponseEntity<Map<String,Object>> send(@RequestParam(value = "username") String username, @RequestParam(value = "info") String info) {
         System.out.println("/sendToUser");
-        springWebSocketHandler.sendMessageToUser(username, new TextMessage(info));
+        System.out.println("!!!!!!!!!!!!!!!"+username+info);
+        PostMessage postMessage = new PostMessage(true,1,info);
+        springWebSocketHandler.sendMessageToUser(username, new TextMessage(postMessage.toString()));
         System.out.println("发送至：" + username);
-        return "success";
+
+        //返回值
+        Map<String,Object> map1 = new HashMap<String,Object>();
+        map1.put("success",true);
+        return new ResponseEntity<Map<String,Object>>(map1, HttpStatus.OK);
     }
 
     @ResponseBody
     @RequestMapping("/broadcast")
     public ResponseEntity<Map<String,Object>> broadcast(@RequestParam(value = "info") String info) {
-        springWebSocketHandler.sendMessageToUsers(new TextMessage("广播消息：" + info));
+        PostMessage postMessage = new PostMessage(true,100,info);
+        springWebSocketHandler.sendMessageToUsers(new TextMessage(postMessage.toString()));
         System.out.println("广播成功");
 
         //返回值

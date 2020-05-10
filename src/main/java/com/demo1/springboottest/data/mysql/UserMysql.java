@@ -93,7 +93,7 @@ public class UserMysql {
 
 
     //找到好友
-    public FriendRespose selectFriend(int i ){
+    public FriendRespose selectFriend(String i ){
         try {
             Map<String, Object> result =new HashMap<String, Object>();
             // 执行SQL语句

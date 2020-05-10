@@ -1,6 +1,6 @@
 package com.demo1.springboottest.controller;
 
-import com.demo1.springboottest.data.receive.IdReceive;
+
 import com.demo1.springboottest.data.respose.FriendRespose;
 import com.demo1.springboottest.data.User;
 import com.demo1.springboottest.data.mysql.UserMysql;
@@ -74,10 +74,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/getFriend", method = RequestMethod.GET)
-        public ResponseEntity<Map<String,Object>> getFriend(IdReceive idReceive) throws IOException, SQLException, ClassNotFoundException {
-            System.out.println("/user/getfriend");
-            //算出结果   [{key,friendName},{key,friendName}]
-        FriendRespose friendRespose = mysql.selectFriend(idReceive.getId());
+        public ResponseEntity<Map<String,Object>> getFriend
+            (@RequestParam(value = "id") String  userId) throws IOException, SQLException, ClassNotFoundException {
+
+        System.out.println("/user/getfriend");
+        //算出结果   [{key,friendName},{key,friendName}]
+        FriendRespose friendRespose = mysql.selectFriend(userId);
         //返回值
         Map<String,Object> result=new HashMap<String, Object>();
         result.put("data",friendRespose.getData());

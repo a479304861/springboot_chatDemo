@@ -7,10 +7,7 @@ import com.demo1.springboottest.data.mysql.UserMysql;
 import com.demo1.springboottest.data.respose.MessagePost;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -21,7 +18,7 @@ import java.util.Map;
 
 @RestController
 public class UserController {
-    private  UserMysql mysql;
+    private static UserMysql mysql;
     //初始化数据库
     public UserController() throws SQLException, ClassNotFoundException {
         mysql = new UserMysql();
@@ -106,6 +103,20 @@ public class UserController {
     }
 
 
+    @RequestMapping("/sendToUser")
+    public ResponseEntity<Map<String,Object>> sendToUser
+            (@RequestParam(value = "sendId") String sendId,
+             @RequestParam(value = "receiveId") String receiveId,
+             @RequestParam(value = "info") String info) {
+        System.out.println("/sendToUser");
+
+        Boolean aBoolean = mysql.addMessage(sendId, receiveId, info);
+
+        //返回值
+        Map<String,Object> map1 = new HashMap<String,Object>();
+        map1.put("success",true);
+        return new ResponseEntity<Map<String,Object>>(map1, HttpStatus.OK);
+    }
 
 }
 

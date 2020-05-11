@@ -7,7 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 @SpringBootTest(classes = SpringboottestApplication.class)
@@ -32,12 +35,7 @@ class SpringboottestApplicationTests {
 //        UserController userController = new UserController();
 //        System.out.println( userController.getMessage(17,5));
 //        UserMysql userMysql = new UserMysql();
-//        System.out.println(userMysql.selectMessage(17,5));
-
-
-
+//        System.out.println(userMysql.addMessage(17,5,"123"));
     }
-
-
 }
 

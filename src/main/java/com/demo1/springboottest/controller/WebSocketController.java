@@ -49,20 +49,7 @@ public class WebSocketController {
         return new ResponseEntity<Map<String,Object>>(map1, HttpStatus.OK);
     }
 
-    @ResponseBody
-    @RequestMapping("/sendToUser")
-    public ResponseEntity<Map<String,Object>> send(@RequestParam(value = "username") String username, @RequestParam(value = "info") String info) {
-        System.out.println("/sendToUser");
-        System.out.println("!!!!!!!!!!!!!!!"+username+info);
-        PostMessage postMessage = new PostMessage(true,1,info);
-        springWebSocketHandler.sendMessageToUser(username, new TextMessage(postMessage.toString()));
-        System.out.println("发送至：" + username);
 
-        //返回值
-        Map<String,Object> map1 = new HashMap<String,Object>();
-        map1.put("success",true);
-        return new ResponseEntity<Map<String,Object>>(map1, HttpStatus.OK);
-    }
 
     @ResponseBody
     @RequestMapping("/broadcast")

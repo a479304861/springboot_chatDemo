@@ -6,19 +6,22 @@ import com.corundumstudio.socketio.*;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.demo1.springboottest.data.Params;
+import com.demo1.springboottest.data.mysql.UserMysql;
+import com.demo1.springboottest.data.receive.SendToAll;
+import com.demo1.springboottest.data.receive.SendToMessage;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 public class NamespaceSocketServer {
 
-    private static Map<String, Object> nameToClient;
-
-    public NamespaceSocketServer() {
+    private static Map<String, SocketIOClient> nameToClient;
+    private static UserMysql mysql;
+    public NamespaceSocketServer() throws SQLException, ClassNotFoundException {
         nameToClient = new HashMap<>();
+        mysql=new UserMysql();
     }
 
     public static void main() {
@@ -39,7 +42,7 @@ public class NamespaceSocketServer {
                 // 判断是否有客户端连接
                 if (client != null) {
                     System.out.println(client.getSessionId() + " has connected.");
-                    client.joinRoom(client.getHandshakeData().getSingleUrlParam("appid"));
+                    client.joinRoom(client.getHandshakeData().getSingleUrlParam("broadcast"));
                 } else {
                     System.out.println( " !!!!has connected.");
                 }
@@ -54,31 +57,48 @@ public class NamespaceSocketServer {
         server.addEventListener("login", Params.class, new DataListener<Params>() {
             @Override
             public void onData(SocketIOClient client, Params data, AckRequest ackRequest) {
-                System.out.println("接收到客户端login消息：code = " + data.getName());
+                System.out.println("接收到客户端login消息：Name = " + data.getName());
+                System.out.println("接收到客户端login消息：password = " + data.getPassword());
                 // check is ack requested by client, but it's not required check
-                nameToClient.put(data.getName(),client);
+//                nameToClient.put(data.getName(),client);
                 // 向客户端发送消息
-                Map<String, Object> result = new HashMap<>();
-                result.put("登录成功，sessionId=" , data.getName());
+//                Map<String, Object> result = new HashMap<>();
+//                result.put("有用户，登录成功，sessionId=" , data.getName());
                 // 第一个参数必须与eventName一致，第二个参数data必须与eventClass一致
-                String room = client.getHandshakeData().getSingleUrlParam("appid");
-                server.getRoomOperations(room).sendEvent("login", result);
+                String room = client.getHandshakeData().getSingleUrlParam("broadcast");
+                server.getRoomOperations(room).sendEvent("login", "result");
             }
         });
-        server.addEventListener("sendTo", Params.class, new DataListener<Params>() {
+        server.addEventListener("sendTo", SendToMessage.class, new DataListener<SendToMessage>() {
             @Override
-            public void onData(SocketIOClient client, Params data, AckRequest ackRequest) {
-                System.out.println("接收到客户端login消息：code = " + data.getName());
+            public void onData(SocketIOClient client, SendToMessage data, AckRequest ackRequest) {
+                System.out.println("接收到客户端login消息：code = " + data.toString());
                 // check is ack requested by client, but it's not required check
-                nameToClient.put(data.getName(),client);
+
                 // 向客户端发送消息
                 Map<String, Object> result = new HashMap<>();
-                result.put("登录成功，sessionId=" , data.getName());
+                result.put("code",1);
+                nameToClient.get(data.getReceiveId()).joinRoom("temp");
+                client.joinRoom("temp");
                 // 第一个参数必须与eventName一致，第二个参数data必须与eventClass一致
-                String room = client.getHandshakeData().getSingleUrlParam("appid");
-                server.getRoomOperations(room).sendEvent("login", result);
+                String room = client.getHandshakeData().getSingleUrlParam("temp");
+
+                server.getRoomOperations(room).sendEvent("newMessage", result);
+                client.leaveRoom("temp");
+                nameToClient.get(data.getReceiveId()).leaveRoom("temp");
             }
         });
+        server.addEventListener("broadcast", SendToAll.class, new DataListener<SendToAll>() {
+            @Override
+            public void onData(SocketIOClient client, SendToAll sendToAll, AckRequest ackRequest) throws Exception {
+                Map<String, Object> result = new HashMap<>();
+                result.put("code",100);
+                String room = client.getHandshakeData().getSingleUrlParam("broadcast");
+                server.getRoomOperations(room).sendEvent("newMessage", result);
+            }
+        });
+
+
         server.start();
         System.out.println("SocketIO服务器启动");
     }

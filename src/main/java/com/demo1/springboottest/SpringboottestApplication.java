@@ -13,7 +13,7 @@ public class SpringboottestApplication {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         SpringApplication.run(SpringboottestApplication.class, args);
-//        NamespaceSocketServer.main();
+        NamespaceSocketServer.main();
     }
 
 }

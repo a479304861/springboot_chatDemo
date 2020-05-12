@@ -13,7 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>springboottest</name>
     <description>Demo project for Spring Boot</description>
-
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -81,11 +80,10 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        //socketio
         <dependency>
             <groupId>com.corundumstudio.socketio</groupId>
             <artifactId>netty-socketio</artifactId>
-            <version>1.7.17</version>
+            <version>1.7.13</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -97,8 +95,6 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.13.Final</version>
         </dependency>
-
-
 
     </dependencies>
 

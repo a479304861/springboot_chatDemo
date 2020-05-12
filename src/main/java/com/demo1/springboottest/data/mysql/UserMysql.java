@@ -5,7 +5,6 @@ import com.demo1.springboottest.data.User;
 import com.demo1.springboottest.data.respose.MessagePost;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +107,7 @@ public class UserMysql {
                 FriendRespose.DataBean dataBean = new FriendRespose.DataBean();
                 dataBean.setFriendId(rs.getInt(1));
                 dataBean.setName(rs.getString(2));
-                dataBean.setOnline(rs.getBoolean(3));
+                dataBean.setIsOnline(rs.getString(3));
                 friend.addData(dataBean);
             }
             return friend;
@@ -167,7 +166,7 @@ public class UserMysql {
             String sql = "insert into message(sendId, receiveId,content,time) " +
                     "values(%s,%s,\"%s\",\"%s\")";
             sql = String.format(sql,sendId,receiveId, content,time);
-            System.out.println(sql);
+//            System.out.println(sql);
             // 动态执行SQL语句
             stmt.execute(sql);
             return true;
@@ -178,6 +177,25 @@ public class UserMysql {
         }
         return false;
     }
+    //上线
+    public Boolean online(String name) throws SQLException {
+        String sql = "UPDATE user SET isOnline=1  WHERE Name= \"%s\"";
+        sql = String.format(sql,name);
+        System.out.println(sql);
+        // 动态执行SQL语句
+        boolean execute = stmt.execute(sql);
+        return execute;
 
+    }
 
+    //下线
+    public boolean downline(String name) throws SQLException {
+        String sql = "UPDATE user SET isOnline=0  WHERE Name= \"%s\"";
+        sql = String.format(sql,name);
+        System.out.println(sql);
+        // 动态执行SQL语句
+        boolean execute = stmt.execute(sql);
+        return execute;
+
+    }
 }

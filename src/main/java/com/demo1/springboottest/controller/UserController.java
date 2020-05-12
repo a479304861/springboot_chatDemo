@@ -50,6 +50,7 @@ public class UserController {
 //        System.out.println(s);
         if (s!=null) {
              result = mysql.select(user.getName());
+             mysql.online(user.getName());
 //            System.out.println(result);
         }
 

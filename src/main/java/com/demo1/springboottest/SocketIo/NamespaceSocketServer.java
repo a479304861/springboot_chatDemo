@@ -18,26 +18,24 @@ import java.util.Map;
 
 public class NamespaceSocketServer {
 
-    private static Map<String, SocketIOClient> nameToClient;
-    private static UserMysql mysql;
 
-    public NamespaceSocketServer() throws SQLException, ClassNotFoundException {
-        nameToClient = new HashMap<String, SocketIOClient>();
-        mysql = new UserMysql();
-    }
 
-    public static void main() {
+
+
+    public static void main() throws SQLException, ClassNotFoundException {
         /*
          * 创建Socket，并设置监听端口
          */
+        UserMysql mysql = new UserMysql();
         Configuration config = new Configuration();
         config.setPort(9091);
-        config.setHostname("localhost");
         final SocketConfig socketConfig = new SocketConfig();
         socketConfig.setReuseAddress(true);
         config.setSocketConfig(socketConfig);
         SocketIOServer server = new SocketIOServer(config);
 
+        Map<String, SocketIOClient> nameToClient=new HashMap<>();
+        Map<Object,String > clientToName=new HashMap<>();
 
         server.addConnectListener(new ConnectListener() {
             @Override
@@ -95,31 +93,39 @@ public class NamespaceSocketServer {
 //                nameToClient.get(data.getReceiveId()).leaveRoom("temp");
 //            }
 //        });
-        //广播
-        server.addEventListener("broadcast", String.class, new DataListener<String>() {
+        //上线广播   code-->3
+        server.addEventListener("newMessage", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient client, String s, AckRequest ackRequest) throws Exception {
-                System.out.println("socket.io/broadcast");
+                System.out.println("socket.io/newMessage");
+                System.out.println(s);
+
+
                 Map<String, Object> result = new HashMap<>();
-                System.out.println(s.toString());
-                result.put("code", 100);
-                String room = client.getHandshakeData().getSingleUrlParam("broadcast");
-                server.getRoomOperations(room).sendEvent("broadcast", result);
+                result.put("code", 3);
+                server.getRoomOperations("broadcast").sendEvent("reNewMessage", result);
             }
         });
 
         //登入
-        server.addEventListener("login", String.class, (client, data, ackRequest) -> {
-            System.out.println("socket.io/login");
-            System.out.println("账号：" + data + "-->已上线");
-//            mysql.online(data);
+        server.addEventListener("login", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient client, String s, AckRequest ackRequest) throws Exception {
+                System.out.println("socket.io/login");
+                System.out.println("账号：" + s +"ssid:"+client.getSessionId()+"已上线");
+                //上线通知code --》1
 
-
-            //下线通知code --》1
-            Map<String , Object> map = new HashMap<>();
-            map.put("code",1);
-            server.getRoomOperations("broadcast").sendEvent("relogin",map);
+                nameToClient.put(s,client);
+                clientToName.put(String.valueOf(client.getSessionId()),s);
+//                nameToClient.put(s,client);
+                Map<String , Object> map = new HashMap<>();
+                map.put("code",1);
+                server.getRoomOperations("broadcast").sendEvent("reLogin",map);
+            }
         });
+
+
+
 
     //心跳检测
         server.addEventListener("answer",String.class,(client,data,ackRequest)->{
@@ -129,8 +135,22 @@ public class NamespaceSocketServer {
         //断开连接
         server.addDisconnectListener(new DisconnectListener() {
             @Override
-            public void onDisconnect(SocketIOClient socketIOClient) {
+            public void onDisconnect(SocketIOClient client) {
                 System.out.println("有用户断开连接");
+                String s = clientToName.get(String.valueOf(client.getSessionId()));
+                System.out.println(s+":用户断开连接");
+                try {
+                    mysql.downline(s);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                nameToClient.remove(s);
+                clientToName.remove(String.valueOf(client.getSessionId()));
+
+                //下线通知code --》1
+                Map<String , Object> map = new HashMap<>();
+                map.put("code",1);
+                server.getRoomOperations("broadcast").sendEvent("reLogin",map);
             }
         });
         server.start();
@@ -140,7 +160,7 @@ public class NamespaceSocketServer {
         while (true){
             try {
                 Thread.sleep(1500);
-                //广播消息
+                //广播消息 code-->100
                 Map<String , Object> map = new HashMap<>();
                 map.put("code","100");
                 server.getBroadcastOperations().sendEvent("broadcast",map);

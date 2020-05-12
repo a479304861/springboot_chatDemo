@@ -108,7 +108,7 @@ public class UserMysql {
                 FriendRespose.DataBean dataBean = new FriendRespose.DataBean();
                 dataBean.setFriendId(rs.getInt(1));
                 dataBean.setName(rs.getString(2));
-                dataBean.setOnline(rs.getBoolean(3));
+                dataBean.setIsOnline(rs.getString(3));
                 friend.addData(dataBean);
             }
             return friend;
@@ -177,6 +177,17 @@ public class UserMysql {
             e.printStackTrace();
         }
         return false;
+    }
+    //上线
+    public Boolean online(String name) throws SQLException {
+        String sql = "UPDATE user SET isOnline=1  WHERE Name= \"%s\"";
+        sql = String.format(sql,name);
+        System.out.println(sql);
+        // 动态执行SQL语句
+        boolean execute = stmt.execute(sql);
+        return execute;
+
+
     }
 
 

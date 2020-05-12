@@ -22,7 +22,7 @@ public class NamespaceSocketServer {
     private static UserMysql mysql;
 
     public NamespaceSocketServer() throws SQLException, ClassNotFoundException {
-        nameToClient = new HashMap<>();
+        nameToClient = new HashMap<String, SocketIOClient>();
         mysql = new UserMysql();
     }
 
@@ -95,6 +95,7 @@ public class NamespaceSocketServer {
 //                nameToClient.get(data.getReceiveId()).leaveRoom("temp");
 //            }
 //        });
+        //广播
         server.addEventListener("broadcast", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient client, String s, AckRequest ackRequest) throws Exception {
@@ -107,19 +108,23 @@ public class NamespaceSocketServer {
             }
         });
 
-        server.addEventListener("login", Params.class, (client, data, ackRequest) -> {
+        //登入
+        server.addEventListener("login", String.class, (client, data, ackRequest) -> {
             System.out.println("socket.io/login");
-            System.out.println("server: " + "：客户端：订阅成功，订阅信息為->" + data.getName());
-            //sub事件成功反e
+            System.out.println("账号：" + data + "-->已上线");
+//            mysql.online(data);
+
+
+            //下线通知code --》1
             Map<String , Object> map = new HashMap<>();
-            map.put("name","data");
+            map.put("code",1);
             server.getRoomOperations("broadcast").sendEvent("relogin",map);
         });
 
     //心跳检测
         server.addEventListener("answer",String.class,(client,data,ackRequest)->{
-            System.out.println("socket.io/answer");
-            System.out.println("收到answer->" + data);
+//            System.out.println("socket.io/answer");
+//            System.out.println("收到answer->" + data);
         });
         //断开连接
         server.addDisconnectListener(new DisconnectListener() {
@@ -130,6 +135,8 @@ public class NamespaceSocketServer {
         });
         server.start();
         System.out.println("SocketIO服务器启动");
+
+        //心跳发出
         while (true){
             try {
                 Thread.sleep(1500);

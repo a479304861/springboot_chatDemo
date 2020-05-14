@@ -24,8 +24,6 @@ public class HelloController {
     public ResponseEntity<Map<String,Object>> getUser() throws IOException{
             System.out.println("/user");
             Map<String,Object> map = new HashMap<String,Object>();
-
-
             //返回值
         map.put("succeed",true);
         User user = new User("zhangsan","123");

@@ -198,4 +198,17 @@ public class UserMysql {
         return execute;
 
     }
+
+    public boolean addFriend(String name1,String name2) throws SQLException {
+        String sql = "insert into friend(userid, friendid) " +
+                "values(%s,%s)";
+        String sql1 = String.format(sql,name1,name2);
+        String sql2 = String.format(sql,name2,name1);
+
+        System.out.println(sql);
+        // 动态执行SQL语句
+        boolean execute2 = stmt.execute(sql1);
+        boolean execute1 = stmt.execute(sql2);
+        return execute1;
+    }
 }

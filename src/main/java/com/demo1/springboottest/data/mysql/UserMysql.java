@@ -99,7 +99,9 @@ public class UserMysql {
         try {
             Map<String, Object> result = new HashMap<String, Object>();
             // 执行SQL语句
-            String sql = "SELECT  Userid,name,isonline FROM user WHERE UserId in (select friendid from friend where Userid='%s')";
+            String sql = "SELECT  userid,name,isOnline,lastmessage,lasttime\n" +
+                    "FROM user,(select friendid,lastmessage,lasttime from friend where Userid='%s') as a \n" +
+                    "WHERE user.UserId=a.friendid";
             sql = String.format(sql, i);
             ResultSet rs = stmt.executeQuery(sql);
             FriendRespose friend = new FriendRespose();
@@ -108,6 +110,8 @@ public class UserMysql {
                 dataBean.setFriendId(rs.getInt(1));
                 dataBean.setName(rs.getString(2));
                 dataBean.setIsOnline(rs.getString(3));
+                dataBean.setLastMessage(rs.getString(4));
+                dataBean.setTime(rs.getString(5));
                 friend.addData(dataBean);
             }
             return friend;
@@ -210,5 +214,28 @@ public class UserMysql {
         boolean execute2 = stmt.execute(sql1);
         boolean execute1 = stmt.execute(sql2);
         return execute1;
+    }
+
+    public boolean updateLastMessage(String sendId, String receiveId, String info) throws SQLException {
+        Calendar cal=Calendar.getInstance();
+        //用Calendar类提供的方法获取年、月、日、时、分、秒
+        int year  =cal.get(Calendar.YEAR);   //年
+        int month =cal.get(Calendar.MONTH)+1;  //月  默认是从0开始  即1月获取到的是0
+        int day   =cal.get(Calendar.DAY_OF_MONTH);  //日，即一个月中的第几天
+        int hour  =cal.get(Calendar.HOUR_OF_DAY);  //小时
+        int minute=cal.get(Calendar.MINUTE);   //分
+        int second=cal.get(Calendar.SECOND);  //秒
+
+        //拼接成字符串输出
+        String time=year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+        System.out.println("当前时间是---->"+time);
+
+        String sql = "UPDATE friend SET lastmessage=\"%s\" ,lasttime=\"%s\" " +
+                "WHERE (userid= \"%s\" and friendid=\"%s\") or((userid= \"%s\" and friendid=\"%s\"))";
+        sql = String.format(sql,info,time,sendId,receiveId,receiveId,sendId);
+        System.out.println(sql);
+        // 动态执行SQL语句
+        boolean execute = stmt.execute(sql);
+        return execute;
     }
 }

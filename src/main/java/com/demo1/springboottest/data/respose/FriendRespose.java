@@ -22,8 +22,26 @@ public class FriendRespose {
 
     public static class DataBean{
         private int friendId;
+        private String name;
         private String isOnline;
+        private String lastMessage;
+        private String time;
 
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
+        }
+
+        public String getLastMessage() {
+            return lastMessage;
+        }
+
+        public void setLastMessage(String lastMessage) {
+            this.lastMessage = lastMessage;
+        }
 
         public String getIsOnline() {
             return isOnline;
@@ -37,12 +55,13 @@ public class FriendRespose {
         public String toString() {
             return "DataBean{" +
                     "friendId=" + friendId +
-                    ", isOnline=" + isOnline +
+                    ", isOnline='" + isOnline + '\'' +
+                    ", lastMessage='" + lastMessage + '\'' +
+                    ", time='" + time + '\'' +
                     ", name='" + name + '\'' +
                     '}';
         }
 
-        private String name;
         public int getFriendId() {
             return friendId;
         }

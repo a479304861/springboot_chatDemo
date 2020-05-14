@@ -32,10 +32,10 @@ class SpringboottestApplicationTests {
     @Test
     public  void test() throws SQLException, IOException, ClassNotFoundException
 {
-//        UserController userController = new UserController();
-//        System.out.println( userController.getMessage(17,5));
+        UserController userController = new UserController();
+        System.out.println( userController.getFriend("17"));
 //        UserMysql userMysql = new UserMysql();
-//        System.out.println(userMysql.online("brtj"));
+//            System.out.println(userMysql.selectFriend("17"));
     }
 }
 

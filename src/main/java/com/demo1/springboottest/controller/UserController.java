@@ -131,11 +131,11 @@ public class UserController {
     public ResponseEntity<Map<String,Object>> sendToUser
             (@RequestParam(value = "sendId") String sendId,
              @RequestParam(value = "receiveId") String receiveId,
-             @RequestParam(value = "info") String info) {
+             @RequestParam(value = "info") String info) throws SQLException {
         System.out.println("/sendToUser");
 
-        Boolean aBoolean = mysql.addMessage(sendId, receiveId, info);
-
+        mysql.addMessage(sendId, receiveId, info);
+        mysql.updateLastMessage(sendId,receiveId,info);
         //返回值
         Map<String,Object> map1 = new HashMap<String,Object>();
         map1.put("success",true);

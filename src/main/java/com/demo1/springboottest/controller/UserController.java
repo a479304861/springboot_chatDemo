@@ -51,16 +51,23 @@ public class UserController {
     public ResponseEntity<Map<String,Object>> register(User user) throws IOException, SQLException, ClassNotFoundException {
         System.out.println("/user/register");
         Map<String, Object> result=new HashMap<String, Object>();
-        boolean isSucceed = mysql.insert(user.getName(), user.getPassword());
-        if (isSucceed=true) {
-             result = mysql.select(user.getName());
+        String s = mysql.selectPassword(user.getName());
+        Map<String,Object> map1 = new HashMap<String,Object>();
+        if (s!=null) {
+            map1.put("succeed",false);
+        }else{
+            boolean isSucceed = mysql.insert(user.getName(), user.getPassword());
+            if (isSucceed=true) {
+                result = mysql.select(user.getName());
+                mysql.online(user.getName());
+            }
+            List<Object> users = new ArrayList<Object>();
+            users.add(result);
+            map1.put("data",users);
+            map1.put("succeed",isSucceed);
         }
         //返回值
-        List<Object> users = new ArrayList<Object>();
-        users.add(result);
-        Map<String,Object> map1 = new HashMap<String,Object>();
-        map1.put("data",users);
-        map1.put("succeed",isSucceed);
+        System.out.println(map1);
         return new ResponseEntity<Map<String,Object>>(map1, HttpStatus.OK);
     }
 

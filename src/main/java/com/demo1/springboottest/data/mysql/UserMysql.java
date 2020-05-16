@@ -101,7 +101,8 @@ public class UserMysql {
             // 执行SQL语句
             String sql = "SELECT  userid,name,isOnline,lastmessage,lasttime\n" +
                     "FROM user,(select friendid,lastmessage,lasttime from friend where Userid='%s') as a \n" +
-                    "WHERE user.UserId=a.friendid";
+                    "WHERE user.UserId=a.friendid\n" +
+                    "order by lasttime desc";
             sql = String.format(sql, i);
             ResultSet rs = stmt.executeQuery(sql);
             FriendRespose friend = new FriendRespose();
